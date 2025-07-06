@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">SnackHack - Your Culinary Companion</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a fresh, modern, and vibrant look */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FDF8F0 0%, #FAEEDD 100%); /* Soft cream to light peach gradient */
+            min-height: 100vh;
+            display: flex;              
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem; /* Increased padding */
+            position: relative;
+            overflow-x: hidden; /* Prevent horizontal scroll on animations */
+        }
+
+        /* Subtle background patterns/elements - more abstract food shapes */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            background-color: rgba(255, 160, 0, 0.08); /* Soft orange accent */
+            border-radius: 50%;
+            filter: blur(70px); /* Softer blur */
+            z-index: -1;
+            animation: floatEffect 12s infinite ease-in-out alternate; /* Slower animation */
+        }
+
+        body::before {
+            width: 250px;
+            height: 250px;
+            top: 8%;
+            left: 7%;
+            background-color: rgba(255, 193, 7, 0.1); /* Lighter yellow accent */
+            animation-delay: 0s;
+        }
+
+        body::after {
+            width: 300px;
+            height: 300px;
+            bottom: 5%;
+            right: 8%;
+            background-color: rgba(255, 112, 67, 0.1); /* Soft red-orange accent */
+            animation-delay: 3s;
+        }
+
+        @keyframes floatEffect {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, 40px) scale(1.08); } /* More movement and scale */
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .container {
+            max-width: 1000px; /* Even wider container */
+            background-color: #FFFFFF; /* Clean white background */
+            border: 1px solid #F0E0D0; /* Very subtle, warm border */
+            border-radius: 2rem; /* More pronounced rounded corners */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); /* Deeper, softer shadow */
+            padding: 3.5rem; /* Even more generous padding */
+            animation: fadeInScale 0.9s ease-out forwards; /* Slightly slower container animation */
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); } /* Start smaller */
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            color: #FF8C00; /* DarkOrange - main vibrant accent */
+            font-size: 4.5rem; /* Much larger main heading */
+            font-weight: 900; /* Ultra bold */
+            letter-spacing: -0.08em; /* Tighter letter spacing for impact */
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.1); /* More defined text shadow */
+            line-height: 1; /* Adjust line height for large text */
+        }
+        h2 {
+            color: #D96F00; /* Slightly darker orange for subheadings */
+            font-size: 3rem; /* Larger subheadings */
+            font-weight: 800; /* Extra bold */
+            margin-top: 2.5rem; /* More spacing */
+            margin-bottom: 2rem;
+            letter-spacing: -0.03em;
+        }
+        p {
+            color: #4A4A4A; /* Darker gray for better contrast */
+            line-height: 1.7; /* Increased line height for readability */
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #FF9800 0%, #FF5722 100%); /* Orange to Deep Orange gradient */
+            color: white;
+            font-weight: 700;
+            padding: 1.1rem 2.5rem; /* Even more increased padding */
+            border-radius: 0.8rem; /* Slightly more rounded */
+            transition: all 0.2s ease-out; /* Smoother transitions */
+            box-shadow: 0 12px 25px -8px rgba(255, 140, 0, 0.5); /* Stronger, more colorful shadow */
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem; /* More space between text and spinner */
+            border: none; /* Remove default border */
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #FF5722 0%, #FF9800 100%); /* Reverse gradient on hover */
+            transform: translateY(-6px) scale(1.02); /* More pronounced lift and slight scale */
+            box-shadow: 0 20px 40px -10px rgba(255, 140, 0, 0.7); /* Even stronger, more diffused shadow */
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.2);
+            background: #FF5722; /* Solid color on active */
+        }
+        /* Ripple effect for buttons */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6); /* Brighter ripple */
+            animation: ripple-animation 0.7s linear forwards; /* Slightly slower ripple */
+            transform: scale(0);
+            pointer-events: none;
+            opacity: 0;
+        }
+        @keyframes ripple-animation {
+            from { transform: scale(0); opacity: 1; }
+            to { transform: scale(2.5); opacity: 0; } /* Larger ripple */
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.4); /* Slightly more visible spinner */
+            border-left-color: #ffffff;
+            border-radius: 50%;
+            width: 28px; /* Larger spinner */
+            height: 28px;
+            animation: spin 0.9s linear infinite; /* Slightly faster spin */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Style for clickable dish items - Card-like appearance */
+        .dish-item {
+            cursor: pointer;
+            background-color: #FFFDF8; /* Very light, warm background for cards */
+            border: 1px solid #FFDAB9; /* PeachPuff - soft, warm border */
+            border-radius: 1rem; /* Consistent rounded corners */
+            padding: 1.5rem; /* More padding */
+            transition: all 0.2s ease-out; /* Smoother transitions */
+            opacity: 0;
+            animation: fadeInSlideUp 0.7s ease-out forwards; /* Combined fade-in and slide-up */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start; /* Align text to start */
+            text-align: left;
+        }
+        .dish-item:hover {
+            background-color: #FFF5E6; /* Lighter on hover */
+            transform: translateY(-8px) scale(1.01); /* More pronounced lift and slight scale */
+            box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.1); /* Stronger shadow on hover */
+        }
+        /* Keyframe for fade-in and slide-up animation */
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .dish-item strong {
+            color: #FF8C00; /* DarkOrange for dish names */
+            font-size: 1.6rem; /* Larger dish names */
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+        .dish-item span {
+            font-size: 1.15rem; /* Slightly larger description text */
+            color: #555;
+        }
+
+        /* Enhanced section backgrounds - more distinct from cards */
+        #dishes-output, #created-dish-output, #substitute-output, #meal-suggestion-output {
+            background-color: #FFFDF8; /* Consistent light, warm background for output sections */
+            border: 2px solid #FFDAB9; /* Consistent border color */
+            box-shadow: inset 0 5px 12px rgba(0, 0, 0, 0.08); /* Deeper inset shadow */
+            border-radius: 1.25rem; /* More rounded */
+            padding: 2.5rem; /* Increased padding */
+            min-height: 180px; /* Ensure a good minimum height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        #dishes-output p, #created-dish-output p, #substitute-output p, #meal-suggestion-output p {
+            color: #888; /* Softer gray for initial messages */
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* Modal styling */
+        #message-modal, #recipe-modal {
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+            background-color: rgba(0, 0, 0, 0.8); /* Darker, more opaque overlay for modals */
+        }
+        #message-modal.hidden, #recipe-modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #message-modal .bg-white, #recipe-modal .bg-white {
+            background-color: #FFFFFF; /* White for modal background */
+            border: 2px solid #FFDAB9; /* Soft border */
+            border-radius: 1.8rem; /* Very rounded corners */
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5); /* Stronger, diffused shadow */
+            transform: translateY(-60px); /* More pronounced initial state for modal animation */
+            transition: transform 0.3s ease-out;
+            padding: 3rem; /* More padding */
+        }
+        #message-modal:not(.hidden) .bg-white, #recipe-modal:not(.hidden) .bg-white {
+            transform: translateY(0);
+        }
+        #recipe-modal-content pre {
+            background-color: #FDFDFD; /* Very light background for recipe text */
+            padding: 1.2rem;
+            border-radius: 0.6rem;
+            border: 1px solid #F0F0F0;
+            max-height: 65vh; /* Max height for scrollable recipe */
+            overflow-y: auto;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Input/Select focus styles */
+        select, textarea, input[type="text"] {
+            border: 1px solid #FFC107; /* Amber-500 border */
+            background-color: #FFFBF0; /* Very light cream */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            padding: 1rem 1.5rem; /* Consistent padding */
+            border-radius: 0.75rem; /* Consistent rounded corners */
+            color: #333;
+            font-size: 1.1rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Subtle inset shadow */
+        }
+        select:focus, textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #FF8C00; /* DarkOrange */
+            box-shadow: 0 0 0 5px rgba(255, 140, 0, 0.3); /* DarkOrange with transparency */
+        }
+
+        /* Clear button styling */
+        .clear-btn {
+            position: absolute;
+            right: 18px; /* Adjusted position */
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 2rem; /* Even larger 'x' */
+            color: #A0522D; /* Sienna - warm brown */
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.1s ease;
+            padding: 0 10px; /* More padding for easier click */
+            line-height: 1;
+        }
+        .clear-btn:hover {
+            color: #8B4513; /* SaddleBrown - darker on hover */
+            transform: translateY(-50%) scale(1.3); /* More pronounced scale on hover */
+        }
+        .input-wrapper {
+            position: relative;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+                border-radius: 1.5rem;
+            }
+            h1 {
+                font-size: 3.5rem;
+            }
+            h2 {
+                font-size: 2.2rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            .btn-primary {
+                padding: 0.9rem 1.8rem;
+            }
+            .dish-item strong {
+                font-size: 1.4rem;
+            }
+            .dish-item span {
+                font-size: 1rem;
+            }
+            .clear-btn {
+                font-size: 1.6rem;
+                right: 12px;
+            }
+            body::before, body::after {
+                width: 150px;
+                height: 150px;
+                filter: blur(50px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            h1 {
+                font-size: 2.8rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            p {
+                font-size: 0.9rem;
+            }
+            .btn-primary {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .dish-item strong {
+                font-size: 1.2rem;
+            }
+            .dish-item span {
+                font-size: 0.9rem;
+            }
+            .clear-btn {
+                font-size: 1.2rem;
+                right: 8px;
+            }
+            .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 > div {
+                grid-column: span 1 / span 1 !important; /* Force single column on small screens */
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="container mx-auto rounded-xl">
+        <h1 class="font-extrabold text-center mb-6" data-lang-key="mainHeading">
+            ✨ SnackHack ✨
+        </h1>
+        <p class="text-xl text-gray-700 text-center mb-8" data-lang-key="subHeading">
+            Your ultimate companion for discovering, creating, and hacking delicious Indian snacks and meals!
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                <label for="state-select" class="sr-only" data-lang-key="selectStateLabel">Select a State</label>
+                <select id="state-select" class="block w-full px-5 py-3 border rounded-lg shadow-sm text-lg text-gray-800">
+                    <!-- States will be populated here by JavaScript -->
+                </select>       
+            </div>
+
+            <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                <label for="language-select" class="sr-only" data-lang-key="selectLanguageLabel">Select Language</label>
+                <select id="language-select" class="block w-full px-5 py-3 border rounded-lg shadow-sm text-lg text-gray-800">
+                    <!-- Languages will be populated here by JavaScript -->
+                </select>
+            </div>
+            
+            <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                <label for="dietary-preference-select" class="sr-only" data-lang-key="selectDietaryPreferenceLabel">Select Dietary Preference</label>
+                <select id="dietary-preference-select" class="block w-full px-5 py-3 border rounded-lg shadow-sm text-lg text-gray-800">
+                    <option value="Both" data-lang-key="bothOption">Both</option>
+                    <option value="Vegetarian" data-lang-key="vegetarianOption">Vegetarian</option>
+                    <option value="Non-Vegetarian" data-lang-key="nonVegetarianOption">Non-Vegetarian</option>
+                </select>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 lg:col-span-1 flex items-center justify-center">
+                <button id="generate-btn" class="btn-primary w-full">
+                    <span id="button-text" data-lang-key="generateButtonText">Generate Dishes</span>
+                    <div id="loading-spinner" class="loading-spinner hidden"></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="dishes-output" class="mt-8 p-6 rounded-xl min-h-[200px]">
+            <p class="text-gray-600 text-center text-lg italic" id="initial-message" data-lang-key="initialMessage">
+                Select a state and click "Generate Dishes" to see the magic!
+            </p>
+            <!-- Dishes will be displayed here -->
+        </div>
+
+        <hr class="my-10 border-t-2 border-gray-200">
+
+        <h2 class="font-bold text-center mb-6" data-lang-key="createDishHeading">
+            💡 Hack a Dish from Your Ingredients!
+        </h2>
+        <p class="text-lg text-gray-700 text-center mb-8" data-lang-key="createDishSubHeading">
+            Got ingredients? We'll help you whip up something amazing!
+        </p>
+
+        <div class="flex flex-col gap-4 mb-8">
+            <label for="ingredients-input" class="sr-only" data-lang-key="ingredientsLabel">Your Ingredients</label>
+            <div class="input-wrapper w-full">
+                <textarea id="ingredients-input" rows="4" class="block w-full px-5 py-3 border rounded-lg shadow-sm text-lg text-gray-800 placeholder-gray-400 pr-10" placeholder="e.g., chicken, tomatoes, onions, ginger, garlic, rice" data-lang-key="ingredientsPlaceholder"></textarea>
+                <button type="button" class="clear-btn" id="clear-ingredients-btn" title="Clear ingredients">✖</button>
+            </div>
+
+            <button id="create-dish-btn" class="btn-primary w-full">
+                <span id="create-dish-button-text" data-lang-key="createDishButtonText">Create Dish</span>
+                <div id="create-dish-loading-spinner" class="loading-spinner hidden"></div>
+            </button>
+        </div>
+
+        <div id="created-dish-output" class="mt-8 p-6 rounded-xl min-h-[100px]">
+            <p class="text-gray-600 text-center text-lg italic" id="create-dish-initial-message" data-lang-key="createDishInitialMessage">
+                Enter your ingredients above and click "Create Dish"!
+            </p>
+            <!-- Created dish will be displayed here -->
+        </div>
+
+        <hr class="my-10 border-t-2 border-gray-200">
+
+        <!-- New Feature: Ingredient Substitution -->
+        <h2 class="font-bold text-center mb-6" data-lang-key="substituteHeading">
+            🔄 Ingredient Swap
+        </h2>
+        <p class="text-lg text-gray-700 text-center mb-8" data-lang-key="substituteSubHeading">
+            Missing something? Find perfect substitutes for your ingredients!
+        </p>
+        <div class="flex flex-col gap-4 mb-8">
+            <label for="substitute-input" class="sr-only" data-lang-key="substituteLabel">Ingredient to Substitute</label>
+            <div class="input-wrapper w-full">
+                <input type="text" id="substitute-input" class="block w-full px-5 py-3 border rounded-lg shadow-sm text-lg text-gray-800 placeholder-gray-400 pr-10" placeholder="e.g., Paneer, Tomatoes, Coconut Milk" data-lang-key="substitutePlaceholder">
+                <button type="button" class="clear-btn" id="clear-substitute-btn" title="Clear ingredient">✖</button>
+            </div>
+
+            <button id="get-substitute-btn" class="btn-primary w-full">
+                <span id="get-substitute-button-text" data-lang-key="getSubstituteButtonText">Get Substitutes</span>
+                <div id="substitute-loading-spinner" class="loading-spinner hidden"></div>
+            </button>
+        </div>
+        <div id="substitute-output" class="mt-8 p-6 rounded-xl min-h-[100px]">
+            <p class="text-gray-600 text-center text-lg italic" id="substitute-initial-message" data-lang-key="substituteInitialMessage">
+                Enter an ingredient above and click "Get Substitutes"!
+            </p>
+            <!-- Substitutes will be displayed here -->
+        </div>
+
+        <hr class="my-10 border-t-2 border-gray-200">
+
+        <!-- New Feature: Meal Planning/Suggestion -->
+        <h2 class="font-bold text-center mb-6" data-lang-key="mealSuggestionHeading">
+            🍽️ Meal Idea Generator
+        </h2>
+        <p class="text-lg text-gray-700 text-center mb-8" data-lang-key="mealSuggestionSubHeading">
+            Tell us your meal preferences, and we'll suggest a perfect dish!
+        </p>
+        <div class="flex flex-col gap-4 mb-8">
+            <label for="meal-theme-input" class="sr-only" data-lang-key="mealThemeLabel">Meal Theme/Preferences</label>
+            <div class="input-wrapper w-full">
+                <textarea id="meal-theme-input" rows="3" class="block w-full px-5 py-3 border rounded-lg shadow-sm text-lg text-gray-800 placeholder-gray-400 pr-10" placeholder="e.g., Quick weeknight dinner for two, Healthy breakfast, Vegetarian party menu" data-lang-key="mealThemePlaceholder"></textarea>
+                <button type="button" class="clear-btn" id="clear-meal-theme-btn" title="Clear preferences">✖</button>
+            </div>
+
+            <button id="get-meal-suggestion-btn" class="btn-primary w-full">
+                <span id="get-meal-suggestion-button-text" data-lang-key="getMealSuggestionButtonText">Get Meal Suggestion</span>
+                <div id="meal-suggestion-loading-spinner" class="loading-spinner hidden"></div>
+            </button>
+        </div>
+        <div id="meal-suggestion-output" class="mt-8 p-6 rounded-xl min-h-[100px]">
+            <p class="text-gray-600 text-center text-lg italic" id="meal-suggestion-initial-message" data-lang-key="mealSuggestionInitialMessage">
+                Enter your meal preferences above and click "Get Meal Suggestion"!
+            </p>
+            <!-- Meal suggestion will be displayed here -->
+        </div>
+
+        <!-- Error/Message Modal -->
+        <div id="message-modal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h3 id="modal-title" class="text-xl font-bold text-gray-900 mb-4" data-lang-key="modalTitle"></h3>
+                <p id="modal-message" class="text-gray-700 mb-6" data-lang-key="modalMessage"></p>
+                <button id="modal-close-btn" class="btn-primary">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <!-- Recipe Modal -->
+        <div id="recipe-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <h3 id="recipe-modal-title" class="text-2xl font-bold text-indigo-700 mb-4 text-center"></h3>
+                <div id="recipe-modal-content" class="text-gray-800 text-base leading-relaxed whitespace-pre-wrap">
+                    <p class="text-center text-gray-500" data-lang-key="loadingRecipe">Loading recipe...</p>
+                    <div id="recipe-loading-spinner" class="loading-spinner mx-auto mt-4"></div>
+                </div>
+                <div class="flex justify-center mt-6">
+                    <button id="recipe-modal-close-btn" class="btn-primary">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import necessary Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Initialization - Adjusted for external use
+        let app, db, auth;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        // Only initialize Firebase if a valid config is provided (e.g., when running in Canvas)
+        // If running externally, firebaseConfig will be an empty object, and this block will be skipped.
+        if (Object.keys(firebaseConfig).length > 0) {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app); // This will only be initialized if app is valid
+                auth = getAuth(app); // This will only be initialized if app is valid
+                initializeAuth(); // Call auth initialization if Firebase is set up
+            } catch (e) {
+                console.error("Failed to initialize Firebase with provided config:", e);
+                // Set auth to null to prevent further errors if initialization failed
+                auth = null;
+            }
+        } else {
+            console.warn("Firebase configuration not found. Firebase-dependent features (like authentication, if any were implemented) will not work. To enable Firebase, provide your firebaseConfig object manually if hosting independently.");
+            auth = null; // Ensure auth is null if Firebase isn't initialized
+        }
+
+        async function initializeAuth() {
+            if (auth) { // Only attempt sign-in if auth object is valid
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Signed in with custom token.");
+                    } else {
+                        // If no custom token (e.g., running outside Canvas), sign in anonymously
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously.");
+                    }
+                } catch (error) {
+                    console.error("Firebase authentication error:", error);
+                    showMessageModal("authErrorTitle", "authErrorMessage");
+                }
+            }
+        }
+
+        const stateSelect = document.getElementById('state-select');
+        const languageSelect = document.getElementById('language-select');
+        const dietaryPreferenceSelect = document.getElementById('dietary-preference-select'); // New element
+        const generateBtn = document.getElementById('generate-btn');
+        const dishesOutput = document.getElementById('dishes-output');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const buttonText = document.getElementById('button-text');
+        const initialMessage = document.getElementById('initial-message');
+
+        const ingredientsInput = document.getElementById('ingredients-input');
+        const clearIngredientsBtn = document.getElementById('clear-ingredients-btn'); // New clear button
+        const createDishBtn = document.getElementById('create-dish-btn');
+        const createdDishOutput = document.getElementById('created-dish-output');
+        const createDishLoadingSpinner = document.getElementById('create-dish-loading-spinner');
+        const createDishButtonText = document.getElementById('create-dish-button-text');
+        const createDishInitialMessage = document.getElementById('create-dish-initial-message');
+
+        // New elements for Ingredient Substitution
+        const substituteInput = document.getElementById('substitute-input');
+        const clearSubstituteBtn = document.getElementById('clear-substitute-btn'); // New clear button
+        const getSubstituteBtn = document.getElementById('get-substitute-btn');
+        const substituteOutput = document.getElementById('substitute-output');
+        const substituteLoadingSpinner = document.getElementById('substitute-loading-spinner');
+        const getSubstituteButtonText = document.getElementById('get-substitute-button-text');
+        const substituteInitialMessage = document.getElementById('substitute-initial-message');
+
+        // New elements for Meal Suggestion
+        const mealThemeInput = document.getElementById('meal-theme-input');
+        const clearMealThemeBtn = document.getElementById('clear-meal-theme-btn'); // New clear button
+        const getMealSuggestionBtn = document.getElementById('get-meal-suggestion-btn');
+        const mealSuggestionOutput = document.getElementById('meal-suggestion-output');
+        const mealSuggestionLoadingSpinner = document.getElementById('meal-suggestion-loading-spinner');
+        const getMealSuggestionButtonText = document.getElementById('get-meal-suggestion-button-text');
+        const mealSuggestionInitialMessage = document.getElementById('meal-suggestion-initial-message'); 
+
+
+        const messageModal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        const recipeModal = document.getElementById('recipe-modal');
+        const recipeModalTitle = document.getElementById('recipe-modal-title');
+        const recipeModalContent = document.getElementById('recipe-modal-content');
+        const recipeLoadingSpinner = document.getElementById('recipe-loading-spinner');
+        const recipeModalCloseBtn = document.getElementById('recipe-modal-close-btn');
+
+
+        // List of Indian States (you can expand this list)
+        const indianStates = [
+            "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+            "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+            "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+            "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+            "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+            "Uttar Pradesh", "Uttarakhand", "West Bengal"
+        ];
+
+        // Translations object
+        const translations = {
+            en: {
+                pageTitle: "SnackHack - Your Culinary Companion",
+                mainHeading: "✨ SnackHack ✨",
+                subHeading: "Your ultimate companion for discovering, creating, and hacking delicious Indian snacks and meals!",
+                selectStateLabel: "Select a State",
+                selectLanguageLabel: "Select Language",
+                selectDietaryPreferenceLabel: "Dietary Preference",
+                bothOption: "Both",
+                vegetarianOption: "Vegetarian",
+                nonVegetarianOption: "Non-Vegetarian",
+                generateButtonText: "Generate Dishes",
+                initialMessage: "Select a state and click \"Generate Dishes\" to see the magic!",
+                modalTitle: "Message",
+                modalMessage: "An unexpected error occurred.",
+                modalCloseButton: "Close",
+                selectionRequiredTitle: "Selection Required",
+                selectionRequiredMessage: "Please select a state before generating dishes.",
+                generatingText: "Generating...",
+                apiErrorTitle: "Generation Error",
+                apiErrorMessage: "An error occurred while fetching dishes. Please try again later.",
+                noDishesFound: "No dishes found for this state. Please try again or select another state.",
+                malformedResponse: "Could not generate dishes. The AI response was empty or malformed.",
+                authErrorTitle: "Authentication Error",
+                authErrorMessage: "Failed to authenticate with Firebase. Some features might not work correctly.",
+                createDishHeading: "💡 Hack a Dish from Your Ingredients!",
+                createDishSubHeading: "Got ingredients? We'll help you whip up something amazing!",
+                ingredientsLabel: "Your Ingredients",
+                ingredientsPlaceholder: "e.g., chicken, tomatoes, onions, ginger, garlic, rice",
+                createDishButtonText: "Create Dish",
+                createDishInitialMessage: "Enter your ingredients above and click \"Create Dish\"!",
+                ingredientsRequiredTitle: "Ingredients Required",
+                ingredientsRequiredMessage: "Please enter some ingredients to create a dish.",
+                creatingDishText: "Creating Dish...",
+                createDishApiErrorTitle: "Dish Creation Error",
+                createDishApiErrorMessage: "An error occurred while creating the dish. Please try again later.",
+                noDishCreated: "Could not create a dish with the provided ingredients. Please try different ingredients.",
+                malformedDishResponse: "Could not create dish. The AI response was empty or malformed.",
+                loadingRecipe: "Loading recipe...",
+                recipeError: "Could not fetch recipe. Please try again.",
+                recipeModalTitlePrefix: "Recipe for ",
+                substituteHeading: "🔄 Ingredient Swap",
+                substituteSubHeading: "Missing something? Find perfect substitutes for your ingredients!",
+                substituteLabel: "Ingredient to Substitute",
+                substitutePlaceholder: "e.g., Paneer, Tomatoes, Coconut Milk",
+                getSubstituteButtonText: "Get Substitutes",
+                substituteInitialMessage: "Enter an ingredient above and click \"Get Substitutes\"!",
+                substituteRequiredTitle: "Ingredient Required",
+                substituteRequiredMessage: "Please enter an ingredient to get substitutes.",
+                gettingSubstitutesText: "Getting Substitutes...",
+                substituteApiErrorTitle: "Substitution Error",
+                substituteApiErrorMessage: "An error occurred while fetching substitutes. Please try again later.",
+                noSubstitutesFound: "Could not find substitutes for this ingredient. Please try a different one.",
+                malformedSubstituteResponse: "Could not get substitutes. The AI response was empty or malformed.",
+                mealSuggestionHeading: "🍽️ Meal Idea Generator",
+                mealSuggestionSubHeading: "Tell us your meal preferences, and we'll suggest a perfect dish!",
+                mealThemeLabel: "Meal Theme/Preferences",
+                mealThemePlaceholder: "e.g., Quick weeknight dinner for two, Healthy breakfast, Vegetarian party menu",
+                getMealSuggestionButtonText: "Get Meal Suggestion",
+                mealSuggestionInitialMessage: "Enter your meal preferences above and click \"Get Meal Suggestion\"!",
+                mealThemeRequiredTitle: "Preferences Required",
+                mealThemeRequiredMessage: "Please enter some meal preferences to get a suggestion.",
+                gettingMealSuggestionText: "Getting Suggestion...",
+                mealSuggestionApiErrorTitle: "Meal Suggestion Error",
+                mealSuggestionApiErrorMessage: "An error occurred while fetching meal suggestion. Please try again later.",
+                noMealSuggestionFound: "Could not find a meal suggestion based on your preferences. Please try different preferences.",
+                malformedMealSuggestionResponse: "Could not get meal suggestion. The AI response was empty or malformed."
+            },
+            hi: {
+                pageTitle: "स्नैकहैक - आपका पाक साथी",
+                mainHeading: "✨ स्नैकहैक ✨",
+                subHeading: "स्वादिष्ट भारतीय स्नैक्स और भोजन खोजने, बनाने और हैक करने के लिए आपका अंतिम साथी!",
+                selectStateLabel: "एक राज्य चुनें",
+                selectLanguageLabel: "भाषा चुनें",
+                selectDietaryPreferenceLabel: "आहार पसंद",
+                bothOption: "दोनों",
+                vegetarianOption: "शाकाहारी",
+                nonVegetarianOption: "मांसाहारी",
+                generateButtonText: "व्यंजन उत्पन्न करें",
+                initialMessage: "जादू देखने के लिए एक राज्य चुनें और \"व्यंजन उत्पन्न करें\" पर क्लिक करें!",
+                modalTitle: "संदेश",
+                modalMessage: "एक अप्रत्याशित त्रुटि हुई।",
+                modalCloseButton: "बंद करें",
+                selectionRequiredTitle: "चयन आवश्यक",
+                selectionRequiredMessage: "व्यंजन उत्पन्न करने से पहले कृपया एक राज्य चुनें।",
+                generatingText: "उत्पन्न हो रहा है...",
+                apiErrorTitle: "उत्पत्ति त्रुटि",
+                apiErrorMessage: "व्यंजन प्राप्त करते समय एक त्रुटि हुई। कृपया बाद में पुनः प्रयास करें।",
+                noDishesFound: "इस राज्य के लिए कोई व्यंजन नहीं मिला। कृपया पुनः प्रयास करें या कोई अन्य राज्य चुनें।",
+                malformedResponse: "व्यंजन उत्पन्न नहीं कर सका। एआई प्रतिक्रिया खाली या गलत थी।",
+                authErrorTitle: "प्रमाणीकरण त्रुटि",
+                authErrorMessage: "फायरबेस के साथ प्रमाणित करने में विफल। कुछ सुविधाएँ ठीक से काम नहीं कर सकती हैं।",
+                createDishHeading: "💡 अपनी सामग्री से एक व्यंजन हैक करें!",
+                createDishSubHeading: "सामग्री मिली? हम आपको कुछ अद्भुत बनाने में मदद करेंगे!",
+                ingredientsLabel: "आपकी सामग्री",
+                ingredientsPlaceholder: "उदाहरण: चिकन, टमाटर, प्याज, अदरक, लहसुन, चावल",
+                createDishButtonText: "व्यंजन बनाएं",
+                createDishInitialMessage: "अपनी सामग्री ऊपर दर्ज करें और \"व्यंजन बनाएं\" पर क्लिक करें!",
+                ingredientsRequiredTitle: "सामग्री आवश्यक",
+                ingredientsRequiredMessage: "एक व्यंजन बनाने के लिए कृपया कुछ सामग्री दर्ज करें।",
+                creatingDishText: "व्यंजन बना रहा है...",
+                createDishApiErrorTitle: "व्यंजन निर्माण त्रुटि",
+                createDishApiErrorMessage: "व्यंजन बनाते समय एक त्रुटि हुई। कृपया बाद में पुनः प्रयास करें।",
+                noDishCreated: "प्रदान की गई सामग्री से कोई व्यंजन नहीं बनाया जा सका। कृपया अलग सामग्री का प्रयास करें।",
+                malformedDishResponse: "व्यंजन नहीं बना सका। एआई प्रतिक्रिया खाली या गलत थी।",
+                loadingRecipe: "रेसिपी लोड हो रही है...",
+                recipeError: "रेसिपी प्राप्त नहीं हो सकी। कृपया पुनः प्रयास करें।",
+                recipeModalTitlePrefix: "के लिए नुस्खा ",
+                substituteHeading: "🔄 सामग्री स्वैप",
+                substituteSubHeading: "कुछ गुम है? अपनी सामग्री के लिए सही विकल्प खोजें!",
+                substituteLabel: "प्रतिस्थापित करने के लिए सामग्री",
+                substitutePlaceholder: "उदाहरण: पनीर, टमाटर, नारियल का दूध",
+                getSubstituteButtonText: "प्रतिस्थापन प्राप्त करें",
+                substituteInitialMessage: "ऊपर एक सामग्री दर्ज करें और \"प्रतिस्थापन प्राप्त करें\" पर क्लिक करें!",
+                substituteRequiredTitle: "सामग्री आवश्यक",
+                substituteRequiredMessage: "प्रतिस्थापन प्राप्त करने के लिए कृपया एक सामग्री दर्ज करें।",
+                gettingSubstitutesText: "प्रतिस्थापन प्राप्त हो रहा है...",
+                substituteApiErrorTitle: "प्रतिस्थापन त्रुटि",
+                substituteApiErrorMessage: "प्रतिस्थापन प्राप्त करते समय एक त्रुटि हुई। कृपया बाद में पुनः प्रयास करें।",
+                noSubstitutesFound: "इस सामग्री के लिए कोई प्रतिस्थापन नहीं मिला। कृपया कोई भिन्न सामग्री का प्रयास करें।",
+                malformedSubstituteResponse: "प्रतिस्थापन प्राप्त नहीं कर सका। एआई प्रतिक्रिया खाली या गलत थी।",
+                mealSuggestionHeading: "🍽️ भोजन विचार जनरेटर",
+                mealSuggestionSubHeading: "हमें अपनी भोजन प्राथमिकताएं बताएं, और हम एक आदर्श व्यंजन का सुझाव देंगे!",
+                mealThemeLabel: "भोजन थीम/प्राथमिकताएं",
+                mealThemePlaceholder: "उदाहरण: दो के लिए त्वरित रात का खाना, स्वस्थ नाश्ता, शाकाहारी पार्टी मेनू",
+                getMealSuggestionButtonText: "भोजन सुझाव प्राप्त करें",
+                mealSuggestionInitialMessage: "ऊपर अपनी भोजन प्राथमिकताएं दर्ज करें और \"भोजन सुझाव प्राप्त करें\" पर क्लिक करें!",
+                mealThemeRequiredTitle: "प्राथमिकताएं आवश्यक",
+                mealThemeRequiredMessage: "सुझाव प्राप्त करने के लिए कृपया कुछ भोजन प्राथमिकताएं दर्ज करें।",
+                gettingMealSuggestionText: "सुझाव प्राप्त हो रहा है...",
+                mealSuggestionApiErrorTitle: "भोजन सुझाव त्रुटि",
+                mealSuggestionApiErrorMessage: "भोजन सुझाव प्राप्त करते समय एक त्रुटि हुई। कृपया बाद में पुनः प्रयास करें।",
+                noMealSuggestionFound: "आपकी प्राथमिकताओं के आधार पर कोई भोजन सुझाव नहीं मिला। कृपया भिन्न प्राथमिकताएं प्रयास करें।",
+                malformedMealSuggestionResponse: "भोजन सुझाव प्राप्त नहीं कर सका। एआई प्रतिक्रिया खाली या गलत थी।"
+            },
+            bn: { // Bengali
+                pageTitle: "স্ন্যাকহ্যাক - আপনার রন্ধন সঙ্গী",
+                mainHeading: "✨ স্ন্যাকহ্যাক ✨",
+                subHeading: "সুস্বাদু ভারতীয় স্ন্যাকস এবং খাবার আবিষ্কার, তৈরি এবং হ্যাক করার জন্য আপনার চূড়ান্ত সঙ্গী!",
+                selectStateLabel: "একটি রাজ্য নির্বাচন করুন",
+                selectLanguageLabel: "ভাষা নির্বাচন করুন",
+                selectDietaryPreferenceLabel: "খাবারের পছন্দ",
+                bothOption: "উভয়",
+                vegetarianOption: "নিরামিষ",
+                nonVegetarianOption: "আমিষ",
+                generateButtonText: "খাবার তৈরি করুন",
+                initialMessage: "একটি রাজ্য নির্বাচন করুন এবং জাদু দেখতে \"খাবার তৈরি করুন\" এ ক্লিক করুন!",
+                modalTitle: "বার্তা",
+                modalMessage: "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।",
+                modalCloseButton: "বন্ধ করুন",
+                selectionRequiredTitle: "নির্বাচন প্রয়োজন",
+                selectionRequiredMessage: "খাবার তৈরি করার আগে একটি রাজ্য নির্বাচন করুন।",
+                generatingText: "তৈরি হচ্ছে...",
+                apiErrorTitle: "উৎপাদন ত্রুটি",
+                apiErrorMessage: "খাবার আনতে গিয়ে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
+                noDishesFound: "এই রাজ্যের জন্য কোন খাবার পাওয়া যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন বা অন্য রাজ্য নির্বাচন করুন।",
+                malformedResponse: "খাবার তৈরি করা যায়নি। এআই প্রতিক্রিয়া খালি বা ভুল ছিল।",
+                authErrorTitle: "প্রমাণীকরণ ত্রুটি",
+                authErrorMessage: "ফায়ারবেসের সাথে প্রমাণীকরণ ব্যর্থ হয়েছে। কিছু বৈশিষ্ট্য সঠিকভাবে কাজ নাও করতে পারে।",
+                createDishHeading: "💡 আপনার উপকরণ থেকে একটি খাবার হ্যাক করুন!",
+                createDishSubHeading: "উপকরণ আছে? আমরা আপনাকে কিছু আশ্চর্যজনক তৈরি করতে সাহায্য করব!",
+                ingredientsLabel: "আপনার উপকরণ",
+                ingredientsPlaceholder: "যেমন: মুরগি, টমেটো, পেঁয়াজ, আদা, রসুন, ভাত",
+                createDishButtonText: "খাবার তৈরি করুন",
+                createDishInitialMessage: "উপরে আপনার উপকরণ প্রবেশ করান এবং \"খাবার তৈরি করুন\" এ ক্লিক করুন!",
+                ingredientsRequiredTitle: "উপকরণ প্রয়োজন",
+                ingredientsRequiredMessage: "একটি খাবার তৈরি করতে কিছু উপকরণ প্রবেশ করান।",
+                creatingDishText: "খাবার তৈরি হচ্ছে...",
+                createDishApiErrorTitle: "খাবার তৈরির ত্রুটি",
+                createDishApiErrorMessage: "খাবার তৈরির সময় একটি ত্রুটি ঘটেছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
+                noDishCreated: "প্রদত্ত উপকরণ দিয়ে কোন খাবার তৈরি করা যায়নি। অনুগ্রহ করে ভিন্ন উপকরণ চেষ্টা করুন।",
+                malformedDishResponse: "খাবার তৈরি করা যায়নি। এআই প্রতিক্রিয়া খালি বা ভুল ছিল।",
+                loadingRecipe: "রেসিপি লোড হচ্ছে...",
+                recipeError: "রেসিপি আনা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
+                recipeModalTitlePrefix: "এর জন্য রেসিপি ",
+                substituteHeading: "🔄 উপাদান প্রতিস্থাপন",
+                substituteSubHeading: "কিছু অনুপস্থিত? আপনার উপকরণের জন্য নিখুঁত প্রতিস্থাপন খুঁজুন!",
+                substituteLabel: "প্রতিস্থাপন করার জন্য উপাদান",
+                substitutePlaceholder: "যেমন: পনির, টমেটো, নারকেলের দুধ",
+                getSubstituteButtonText: "প্রতিস্থাপন পান",
+                substituteInitialMessage: "উপরে একটি উপাদান প্রবেশ করান এবং \"প্রতিস্থাপন পান\" এ ক্লিক করুন!",
+                substituteRequiredTitle: "উপাদান প্রয়োজন",
+                substituteRequiredMessage: "প্রতিস্থাপন পেতে একটি উপাদান প্রবেশ করান।",
+                gettingSubstitutesText: "প্রতিস্থাপন পাওয়া যাচ্ছে...",
+                substituteApiErrorTitle: "प्रतिस्थापन त्रुटि",
+                substituteApiErrorMessage: "प्रतिस्थापन আনতে গিয়ে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
+                noSubstitutesFound: "এই উপাদানের জন্য কোন প্রতিস্থাপন পাওয়া যায়নি। অনুগ্রহ করে ভিন্ন একটি চেষ্টা করুন।",
+                malformedSubstituteResponse: "প্রতিস্থাপন পাওয়া যায়নি। এআই প্রতিক্রিয়া খালি বা ভুল ছিল।",
+                mealSuggestionHeading: "🍽️ খাবারের ধারণা জেনারেটর",
+                mealSuggestionSubHeading: "আপনার খাবারের পছন্দগুলি বলুন, এবং আমরা একটি নিখুঁত খাবারের পরামর্শ দেব!",
+                mealThemeLabel: "খাবারের থিম/পছন্দ",
+                mealThemePlaceholder: "যেমন: দুজনের জন্য দ্রুত রাতের খাবার, স্বাস্থ্যকর ব্রেকফাস্ট, নিরামিষ পার্টি মেনু",
+                getMealSuggestionButtonText: "খাবারের পরামর্শ পান",
+                mealSuggestionInitialMessage: "উপরে আপনার খাবারের পছন্দগুলি প্রবেশ করান এবং \"খাবারের পরামর্শ পান\" এ ক্লিক করুন!",
+                mealThemeRequiredTitle: "পছন্দ প্রয়োজন",
+                mealThemeRequiredMessage: "একটি পরামর্শ পেতে কিছু খাবারের পছন্দ প্রবেশ করান।",
+                gettingMealSuggestionText: "পরামর্শ পাওয়া যাচ্ছে...",
+                mealSuggestionApiErrorTitle: "খাবারের পরামর্শ ত্রুটি",
+                mealSuggestionApiErrorMessage: "খাবারের পরামর্শ আনতে গিয়ে একটি ত্রুটি ঘটেছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
+                noMealSuggestionFound: "আপনার পছন্দগুলির উপর ভিত্তি করে কোন খাবারের পরামর্শ পাওয়া যায়নি। অনুগ্রহ করে ভিন্ন পছন্দ চেষ্টা করুন।",
+                malformedMealSuggestionResponse: "খাবারের পরামর্শ পাওয়া যায়নি। এআই প্রতিক্রিয়া খালি বা ভুল ছিল।"
+            },
+            mr: { // Marathi
+                pageTitle: "स्नॅकहॅक - तुमचा पाककृती साथी",
+                mainHeading: "✨ स्नॅकहॅक ✨",
+                subHeading: "स्वादिष्ट भारतीय स्नॅक्स आणि जेवण शोधण्यासाठी, तयार करण्यासाठी आणि हॅक करण्यासाठी तुमचा अंतिम साथी!",
+                selectStateLabel: "एक राज्य निवडा",
+                selectLanguageLabel: "भाषा निवडा",
+                selectDietaryPreferenceLabel: "आहार प्राधान्य",
+                bothOption: "दोन्ही",
+                vegetarianOption: "शाकाहारी",
+                nonVegetarianOption: "मांसाहारी",
+                generateButtonText: "पदार्थ तयार करा",
+                initialMessage: "जादू पाहण्यासाठी एक राज्य निवडा आणि \"पदार्थ तयार करा\" वर क्लिक करा!",
+                modalTitle: "संदेश",
+                modalMessage: "एक अनपेक्षित त्रुटी आली.",
+                modalCloseButton: "बंद करा",
+                selectionRequiredTitle: "निवड आवश्यक",
+                selectionRequiredMessage: "पदार्थ तयार करण्यापूर्वी कृपया एक राज्य निवडा.",
+                generatingText: "तयार होत आहे...",
+                apiErrorTitle: "उत्पन्न त्रुटी",
+                apiErrorMessage: "पदार्थ मिळवताना एक त्रुटी आली. कृपया नंतर पुन्हा प्रयत्न करा.",
+                noDishesFound: "या राज्यासाठी कोणतेही पदार्थ सापडले नाहीत. कृपया पुन्हा प्रयत्न करा किंवा दुसरे राज्य निवडा.",
+                malformedResponse: "पदार्थ तयार करता आले नाहीत. एआय प्रतिसाद रिकामा किंवा चुकीचा होता.",
+                authErrorTitle: "प्रमाणीकरण त्रुटी",
+                authErrorMessage: "फायरबेससह प्रमाणीकरण अयशस्वी झाले. काही वैशिष्ट्ये योग्यरित्या कार्य करू शकत नाहीत।",
+                createDishHeading: "💡 तुमच्या सामग्रीतून एक पदार्थ हॅक करा!",
+                createDishSubHeading: "सामग्री मिळाली? आम्ही तुम्हाला काहीतरी अद्भुत बनवण्यात मदत करू!",
+                ingredientsLabel: "तुमची सामग्री",
+                ingredientsPlaceholder: "उदा. चिकन, टोमॅटो, कांदे, आले, लसूण, तांदूळ",
+                createDishButtonText: "पदार्थ तयार करा",
+                createDishInitialMessage: "तुमची सामग्री वर प्रविष्ट करा आणि \"पदार्थ तयार करा\" वर क्लिक करा!",
+                ingredientsRequiredTitle: "सामग्री आवश्यक",
+                ingredientsRequiredMessage: "पदार्थ तयार करण्यासाठी कृपया काही सामग्री प्रविष्ट करा।",
+                creatingDishText: "पदार्थ तयार करत आहे...",
+                createDishApiErrorTitle: "पदार्थ निर्मिती त्रुटी",
+                createDishApiErrorMessage: "पदार्थ तयार करताना एक त्रुटी आली. कृपया नंतर पुन्हा प्रयत्न करा.",
+                noDishCreated: "दिलेल्या सामग्रीतून कोणताही पदार्थ तयार करता आला नाही. कृपया वेगळी सामग्री वापरून पहा.",
+                malformedDishResponse: "पदार्थ तयार करता आले नाहीत. एआय प्रतिसाद रिकामा किंवा चुकीचा होता.",
+                loadingRecipe: "रेसिपी लोड होत आहे...",
+                recipeError: "रेसिपी मिळवता आली नाही. कृपया पुन्हा प्रयत्न करा.",
+                recipeModalTitlePrefix: "साठी रेसिपी ",
+                substituteHeading: "🔄 घटक बदल",
+                substituteSubHeading: "काहीतरी गहाळ आहे? तुमच्या घटकांसाठी योग्य बदल शोधा!",
+                substituteLabel: "बदलण्यासाठी घटक",
+                substitutePlaceholder: "उदा. पनीर, टोमॅटो, नारळाचे दूध",
+                getSubstituteButtonText: "बदल मिळवा",
+                substituteInitialMessage: "वर एक घटक प्रविष्ट करा आणि \"बदल मिळवा\" वर क्लिक करा!",
+                substituteRequiredTitle: "घटक आवश्यक",
+                substituteRequiredMessage: "बदल मिळवण्यासाठी कृपया एक घटक प्रविष्ट करा.",
+                gettingSubstitutesText: "बदल मिळवत आहे...",
+                substituteApiErrorTitle: "बदल त्रुटी",
+                substituteApiErrorMessage: "बदल मिळवताना एक त्रुटी आली. कृपया नंतर पुन्हा प्रयत्न करा.",
+                noSubstitutesFound: "या घटकासाठी कोणतेही बदल सापडले नाहीत. कृपया वेगळा घटक वापरून पहा.",
+                malformedSubstituteResponse: "बदल मिळवता आले नाहीत. एआय प्रतिसाद रिकामा किंवा चुकीचा होता.",
+                mealSuggestionHeading: "🍽️ जेवण कल्पना जनरेटर",
+                mealSuggestionSubHeading: "तुमच्या जेवणाच्या आवडी सांगा, आणि आम्ही एका आदर्श पदार्थाची सूचना देऊ!",
+                mealThemeLabel: "जेवण थीम/आवड",
+                mealThemePlaceholder: "उदा. दोघांसाठी जलद रात्रीचे जेवण, निरोगी नाश्ता, शाकाहारी पार्टी मेनू",
+                getMealSuggestionButtonText: "जेवण सूचना मिळवा",
+                mealSuggestionInitialMessage: "वर तुमच्या जेवणाच्या आवडी प्रविष्ट करा आणि \"जेवण सूचना मिळवा\" वर क्लिक करा!",
+                mealThemeRequiredTitle: "आवड आवश्यक",
+                mealThemeRequiredMessage: "सूचना मिळवण्यासाठी कृपया काही जेवणाच्या आवडी प्रविष्ट करा.",
+                gettingMealSuggestionText: "सूचना मिळवत आहे...",
+                mealSuggestionApiErrorTitle: "जेवण सूचना त्रुटी",
+                mealSuggestionApiErrorMessage: "जेवण सूचना मिळवताना एक त्रुटी आली. कृपया नंतर पुन्हा प्रयत्न करा.",
+                noMealSuggestionFound: "तुमच्या आवडीनुसार कोणतीही जेवण सूचना सापडली नाही. कृपया वेगळ्या आवडी वापरून पहा.",
+                malformedMealSuggestionResponse: "जेवण सूचना मिळवता आली नाही. एआय प्रतिसाद रिकामा किंवा चुकीचा होता।"
+            },
+            te: { // Telugu
+                pageTitle: "స్నాక్‌హాక్ - మీ వంటల సహచరుడు",
+                mainHeading: "✨ స్నాక్‌హాక్ ✨",
+                subHeading: "రుచికరమైన భారతీయ స్నాక్స్ మరియు భోజనాలను కనుగొనడానికి, సృష్టించడానికి మరియు హ్యాక్ చేయడానికి మీ అంతిమ సహచరుడు!",
+                selectStateLabel: "ఒక రాష్ట్రాన్ని ఎంచుకోండి",
+                selectLanguageLabel: "భాషను ఎంచుకోండి",
+                selectDietaryPreferenceLabel: "ఆహార ప్రాధాన్యత",
+                bothOption: "రెండు",
+                vegetarianOption: "శాకాహారం",
+                nonVegetarianOption: "మాంసాహారం",
+                generateButtonText: "వంటకాలు రూపొందించండి",
+                initialMessage: "ఒక రాష్ట్రాన్ని ఎంచుకుని, మ్యాజిక్ చూడటానికి \"వంటకాలు రూపొందించండి\" పై క్లిక్ చేయండి!",
+                modalTitle: "సందేశం",
+                modalMessage: "ఊహించని లోపం సంభవించింది.",
+                modalCloseButton: "మూసివేయి",
+                selectionRequiredTitle: "ఎంపిక అవసరం",
+                selectionRequiredMessage: "వంటకాలను రూపొందించడానికి ముందు దయచేసి ఒక రాష్ట్రాన్ని ఎంచుకోండి.",
+                generatingText: "రూపొందిస్తోంది...",
+                apiErrorTitle: "ఉత్పత్తి లోపం",
+                apiErrorMessage: "వంటకాలను పొందేటప్పుడు లోపం సంభవించింది. దయచేచేసి తర్వాత మళ్ళీ ప్రయత్నించండి.",
+                noDishesFound: "ఈ రాష్ట్రానికి వంటకాలు కనుగొనబడలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి లేదా మరొక రాష్ట్రాన్ని ఎంచుకోండి.",
+                malformedResponse: "వంటకాలను రూపొందించలేకపోయింది. AI ప్రతిస్పందన ఖాళీగా లేదా తప్పుగా ఉంది.",
+                authErrorTitle: "ప్రామాణీకరణ లోపం",
+                authErrorMessage: "ఫైర్‌బేస్‌తో ప్రామాణీకరించడంలో విఫలమైంది. కొన్ని ఫీచర్‌లు సరిగ్గా పనిచేయకపోవచ్చు.",
+                createDishHeading: "💡 మీ పదార్థాల నుండి ఒక వంటకాన్ని హ్యాక్ చేయండి!",
+                createDishSubHeading: "పదార్థాలు ఉన్నాయా? అద్భుతమైనదాన్ని సిద్ధం చేయడానికి మేము మీకు సహాయం చేస్తాము!",
+                ingredientsLabel: "మీ పదార్థాలు",
+                ingredientsPlaceholder: "ఉదా: చికెన్, టొమాటోలు, ఉల్లిపాయలు, అల్లం, వెల్లుల్లి, బియ్యం",
+                createDishButtonText: "వంటకం సృష్టించండి",
+                createDishInitialMessage: "మీ పదార్థాలను పైన నమోదు చేసి, \"వంటకం సృష్టించండి\" పై క్లిక్ చేయండి!",
+                ingredientsRequiredTitle: "పదార్థాలు అవసరం",
+                ingredientsRequiredMessage: "వంటకం సృష్టించడానికి దయచేసి కొన్ని పదార్థాలను నమోదు చేయండి.",
+                creatingDishText: "వంటకం సృష్టిస్తోంది...",
+                createDishApiErrorTitle: "వంటకం సృష్టి లోపం",
+                createDishApiErrorMessage: "వంటకం సృష్టించేటప్పుడు లోపం సంభవించింది. దయచేసి తర్వాత మళ్ళీ ప్రయత్నించండి.",
+                noDishCreated: "అందించిన పదార్థాలతో వంటకం సృష్టించబడలేదు. దయచేసి విభిన్న పదార్థాలను ప్రయత్నించండి.",
+                malformedDishResponse: "వంటకం సృష్టించలేకపోయింది. AI ప్రతిస్పందన ఖాళీగా లేదా తప్పుగా ఉంది.",
+                loadingRecipe: "వంటకం లోడ్ అవుతోంది...",
+                recipeError: "వంటకం పొందలేకపోయింది. దయచేసి మళ్ళీ ప్రయత్నించండి.",
+                recipeModalTitlePrefix: "కోసం వంటకం ",
+                substituteHeading: "🔄 పదార్థ మార్పిడి",
+                substituteSubHeading: "ఏదైనా తక్కువ ఉందా? మీ పదార్థాల కోసం సరైన ప్రత్యామ్నాయాలను కనుగొనండి!",
+                substituteLabel: "ప్రత్యామ్నాయం చేయవలసిన పదార్థం",
+                substitutePlaceholder: "ఉదా: పనీర్, టొమాటోలు, కొబ్బరి పాలు",
+                getSubstituteButtonText: "ప్రత్యామ్నాయాలను పొందండి",
+                substituteInitialMessage: "పైన ఒక పదార్థాన్ని నమోదు చేసి, \"ప్రత్యామ్నాయాలను పొందండి\" పై క్లిక్ చేయండి!",
+                substituteRequiredTitle: "పదార్థం అవసరం",
+                substituteRequiredMessage: "ప్రత్యామ్నాయాలను పొందడానికి దయచేసి ఒక పదార్థాన్ని నమోదు చేయండి.",
+                gettingSubstitutesText: "ప్రత్యామ్నాయాలను పొందుతోంది...",
+                substituteApiErrorTitle: "ప్రత్యామ్నాయ లోపం",
+                substituteApiErrorMessage: "ప్రత్యామ్నాయాలను పొందేటప్పుడు లోపం సంభవించింది. దయచేసి తర్వాత మళ్ళీ ప్రయత్నించండి.",
+                noSubstitutesFound: "ఈ పదార్థానికి ప్రత్యామ్నాయాలు కనుగొనబడలేదు. దయచేసి వేరేదాన్ని ప్రయత్నించండి.",
+                malformedSubstituteResponse: "ప్రత్యామ్నాయాలను పొందలేకపోయింది. AI ప్రతిస్పందన ఖాళీగా లేదా తప్పుగా ఉంది.",
+                mealSuggestionHeading: "🍽️ భోజన ఆలోచన జనరేటర్",
+                mealSuggestionSubHeading: "మీ భోజన ప్రాధాన్యతలను మాకు చెప్పండి, మరియు మేము ఒక ఖచ్చితమైన వంటకాన్ని సూచిస్తాము!",
+                mealThemeLabel: "భోజన థీమ్/ప్రాధాన్యతలు",
+                mealThemePlaceholder: "ఉదా: ఇద్దరికి త్వరిత రాత్రి భోజనం, ఆరోగ్యకరమైన అల్పాహారం, శాఖాహార పార్టీ మెను",
+                getMealSuggestionButtonText: "భోజన సూచన పొందండి",
+                mealSuggestionInitialMessage: "పైన మీ భోజన ప్రాధాన్యతలను నమోదు చేసి, \"భోజన సూచన పొందండి\" పై క్లిక్ చేయండి!",
+                mealThemeRequiredTitle: "ప్రాధాన్యతలు అవసరం",
+                mealThemeRequiredMessage: "సూచన పొందడానికి దయచేసి కొన్ని భోజన ప్రాధాన్యతలను నమోదు చేయండి.",
+                gettingMealSuggestionText: "సూచన పొందుతోంది...",
+                mealSuggestionApiErrorTitle: "భోజన సూచన లోపం",
+                mealSuggestionApiErrorMessage: "భోజన సూచనను పొందేటప్పుడు లోపం సంభవించింది. దయచేసి తర్వాత మళ్ళీ ప్రయత్నించండి。",
+                malformedMealSuggestionResponse: "భోజన సూచనను పొందలేకపోయింది. AI ప్రతిస్పందన ఖాళీగా లేదా తప్పుగా ఉంది。"
+            },
+            kn: { // Kannada
+                pageTitle: "ಸ್ನ್ಯಾಕ್‌ಹ್ಯಾಕ್ - ನಿಮ್ಮ ಪಾಕಶಾಲೆಯ ಸಹಚರ",
+                mainHeading: "✨ ಸ್ನ್ಯಾಕ್‌ಹ್ಯಾಕ್ ✨",
+                subHeading: "ರುಚಿಕರವಾದ ಭಾರತೀಯ ತಿಂಡಿಗಳು ಮತ್ತು ಊಟಗಳನ್ನು ಕಂಡುಹಿಡಿಯಲು, ರಚಿಸಲು ಮತ್ತು ಹ್ಯಾಕ್ ಮಾಡಲು ನಿಮ್ಮ ಅಂತಿಮ ಸಹಚರ!",
+                selectStateLabel: "ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+                selectLanguageLabel: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+                selectDietaryPreferenceLabel: "ಆಹಾರದ ಆದ್ಯತೆ",
+                bothOption: "ಎರಡೂ",
+                vegetarianOption: "ಸಸ್ಯಾಹಾರಿ",
+                nonVegetarianOption: "ಮಾಂಸಾಹಾರಿ",
+                generateButtonText: "ಭಕ್ಷ್ಯಗಳನ್ನು ರಚಿಸಿ",
+                initialMessage: "ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ಮ್ಯಾಜಿಕ್ ನೋಡಲು \"ಭಕ್ಷ್ಯಗಳನ್ನು ರಚಿಸಿ\" ಕ್ಲಿಕ್ ಮಾಡಿ!",
+                modalTitle: "ಸಂದೇಶ",
+                modalMessage: "ಅನಿರೀಕ್ಷಿತ ದೋಷ ಸಂಭವಿಸಿದೆ.",
+                modalCloseButton: "ಮುಚ್ಚಿ",
+                selectionRequiredTitle: "ಆಯ್ಕೆ ಅಗತ್ಯವಿದೆ",
+                selectionRequiredMessage: "ಭಕ್ಷ್ಯಗಳನ್ನು ರಚಿಸುವ ಮೊದಲು ದಯವಿಟ್ಟು ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+                generatingText: "ರಚಿಸಲಾಗುತ್ತಿದೆ...",
+                apiErrorTitle: "ರಚನೆ ದೋಷ",
+                apiErrorMessage: "ಭಕ್ಷ್ಯಗಳನ್ನು ಪಡೆಯುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+                noDishesFound: "ಈ ರಾಜ್ಯಕ್ಕೆ ಯಾವುದೇ ಭಕ್ಷ್ಯಗಳು ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಬೇರೆ ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+                malformedResponse: "ಭಕ್ಷ್ಯಗಳನ್ನು ರಚಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. AI ಪ್ರತಿಕ್ರಿಯೆ ಖಾಲಿಯಾಗಿದೆ ಅಥವಾ ತಪ್ಪಾಗಿದೆ.",
+                authErrorTitle: "ದೃಢೀಕರಣ ದೋಷ",
+                authErrorMessage: "ಫೈರ್‌ಬೇಸ್‌ನೊಂದಿಗೆ ದೃಢೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ. ಕೆಲವು ವೈಶಿಷ್ಟ್ಯಗಳು ಸರಿಯಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸದಿರಬಹುದು.",
+                createDishHeading: "💡 ನಿಮ್ಮ ಪದಾರ್ಥಗಳಿಂದ ಭಕ್ಷ್ಯವನ್ನು ಹ್ಯಾಕ್ ಮಾಡಿ!",
+                createDishSubHeading: "ಪದಾರ್ಥಗಳು ಸಿಕ್ಕಿದೆಯೇ? ಅದ್ಭುತವಾದದ್ದನ್ನು ತಯಾರಿಸಲು ನಾವು ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತೇವೆ!",
+                ingredientsLabel: "ನಿಮ್ಮ ಪದಾರ್ಥಗಳು",
+                ingredientsPlaceholder: "ಉದಾ: ಚಿಕನ್, ಟೊಮೆಟೊ, ಈರುಳ್ಳಿ, ಶುಂಠಿ, ಬೆಳ್ಳುಳ್ಳಿ, ಅಕ್ಕಿ",
+                createDishButtonText: "ಭಕ್ಷ್ಯ ರಚಿಸಿ",
+                createDishInitialMessage: "ನಿಮ್ಮ ಪದಾರ್ಥಗಳನ್ನು ಮೇಲೆ ನಮೂದಿಸಿ ಮತ್ತು \"ಭಕ್ಷ्य ರಚಿಸಿ\" ಕ್ಲಿಕ್ ಮಾಡಿ!",
+                ingredientsRequiredTitle: "ಪದಾರ್ಥಗಳು ಅಗತ್ಯವಿದೆ",
+                ingredientsRequiredMessage: "ಭಕ್ಷ್ಯವನ್ನು ರಚಿಸಲು ದಯವಿಟ್ಟು ಕೆಲವು ಪದಾರ್ಥಗಳನ್ನು ನಮೂದಿಸಿ.",
+                creatingDishText: "ಭಕ್ಷ्य ರಚಿಸಲಾಗುತ್ತಿದೆ...",
+                createDishApiErrorTitle: "ಭಕ್ಷ्य ರಚನೆ ದೋಷ",
+                createDishApiErrorMessage: "ಭಕ್ಷ्यವನ್ನು ರಚಿಸುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+                noDishCreated: "ಒದಗಿಸಿದ ಪದಾರ್ಥಗಳೊಂದಿಗೆ ಭಕ್ಷ್ಯವನ್ನು ರಚಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಬೇರೆ ಪದಾರ್ಥಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
+                malformedDishResponse: "ಭಕ್ಷ्यವನ್ನು ರಚಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. AI ಪ್ರತಿಕ್ರಿಯೆ ಖಾಲಿಯಾಗಿದೆ ಅಥವಾ ತಪ್ಪಾಗಿದೆ.",
+                loadingRecipe: "ಪಾಕವಿಧಾನ ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+                recipeError: "ಪಾಕವಿಧಾನವನ್ನು ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+                recipeModalTitlePrefix: "ಗಾಗಿ ಪಾಕವಿಧಾನ ",
+                substituteHeading: "🔄 ಘಟಕ ಬದಲಿ",
+                substituteSubHeading: "ಏನಾದರೂ ಕಾಣೆಯಾಗಿದೆಯೇ? ನಿಮ್ಮ ಪದಾರ್ಥಗಳಿಗೆ ಪರಿಪೂರ್ಣ ಬದಲಿಗಳನ್ನು ಹುಡುಕಿ!",
+                substituteLabel: "ಬದಲಿಸಲು ಘಟಕ",
+                substitutePlaceholder: "ಉದಾ: ಪನೀರ್, ಟೊಮೆಟೊ, ತೆಂಗಿನ ಹಾಲು",
+                getSubstituteButtonText: "ಬದಲಿಗಳನ್ನು ಪಡೆಯಿರಿ",
+                substituteInitialMessage: "ಮೇಲೆ ಒಂದು ಘಟಕವನ್ನು ನಮೂದಿಸಿ ಮತ್ತು \"ಬದಲಿಗಳನ್ನು ಪಡೆಯಿರಿ\" ಕ್ಲಿಕ್ ಮಾಡಿ!",
+                substituteRequiredTitle: "ಘಟಕ ಅಗತ್ಯವಿದೆ",
+                substituteRequiredMessage: "ಬದಲಿಗಳನ್ನು ಪಡೆಯಲು ದಯವಿಟ್ಟು ಒಂದು ಘಟಕವನ್ನು ನಮೂದಿಸಿ.",
+                gettingSubstitutesText: "ಬದಲಿಗಳನ್ನು ಪಡೆಯಲಾಗುತ್ತಿದೆ...",
+                substituteApiErrorTitle: "ಬದಲಿ ದೋಷ",
+                substituteApiErrorMessage: "ಬದಲಿಗಳನ್ನು ಪಡೆಯುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+                noSubstitutesFound: "ಈ ಘಟಕಕ್ಕೆ ಯಾವುದೇ ಬದಲಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಬೇರೆದನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
+                malformedSubstituteResponse: "ಬದಲಿಗಳನ್ನು ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. AI ಪ್ರತಿಕ್ರಿಯೆ ಖಾಲಿಯಾಗಿದೆ ಅಥವಾ ತಪ್ಪಾಗಿದೆ.",
+                mealSuggestionHeading: "🍽️ ಊಟದ ಕಲ್ಪನೆ ಜನರೇಟರ್",
+                mealSuggestionSubHeading: "ನಿಮ್ಮ ಊಟದ ಆದ್ಯತೆಗಳನ್ನು ನಮಗೆ ತಿಳಿಸಿ, ಮತ್ತು ನಾವು ಒಂದು ಪರಿಪೂರ್ಣ ಭಕ್ಷ್ಯವನ್ನು ಸೂಚಿಸುತ್ತೇವೆ!",
+                mealThemeLabel: "ಊಟದ ಥೀಮ್/ಆದ್ಯತೆಗಳು",
+                mealThemePlaceholder: "ಉದಾ: ಇಬ್ಬರಿಗೆ ತ್ವರಿತ ರಾತ್ರಿಯ ಊಟ, ಆರೋಗ್ಯಕರ ಉಪಹಾರ, ಸಸ್ಯಾಹಾರಿ ಪಾರ್ಟಿ ಮೆನು",
+                getMealSuggestionButtonText: "ಊಟದ ಸಲಹೆ ಪಡೆಯಿರಿ",
+                mealSuggestionInitialMessage: "ಮೇಲೆ ನಿಮ್ಮ ಊಟದ ಆದ್ಯತೆಗಳನ್ನು ನಮೂದಿಸಿ ಮತ್ತು \"ಊಟದ ಸಲಹೆ ಪಡೆಯಿರಿ\" ಕ್ಲಿಕ್ ಮಾಡಿ!",
+                mealThemeRequiredTitle: "ಆದ್ಯತೆಗಳು ಅಗತ್ಯವಿದೆ",
+                mealThemeRequiredMessage: "ಸಲಹೆ ಪಡೆಯಲು ದಯವಿಟ್ಟು ಕೆಲವು ಊಟದ ಆದ್ಯತೆಗಳನ್ನು ನಮೂದಿಸಿ.",
+                gettingMealSuggestionText: "ಸಲಹೆ ಪಡೆಯಲಾಗುತ್ತಿದೆ...",
+                mealSuggestionApiErrorTitle: "ಊಟದ ಸಲಹೆ ದೋಷ",
+                mealSuggestionApiErrorMessage: "ಊಟದ ಸಲಹೆ ಪಡೆಯುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+                noMealSuggestionFound: "ನಿಮ್ಮ ಆದ್ಯತೆಗಳ ಆಧಾರದ ಮೇಲೆ ಯಾವುದೇ ಊಟದ ಸಲಹೆ ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಬೇರೆ ಆದ್ಯತೆಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
+                malformedMealSuggestionResponse: "ಊಟದ ಸಲಹೆ ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. AI ಪ್ರತಿಕ್ರಿಯೆ ಖಾಲಿಯಾಗಿದೆ ಅಥವಾ ತಪ್ಪಾಗಿದೆ。"
+            },
+            gu: { // Gujarati
+                pageTitle: "સ્નેકહેક - તમારો રાંધણ સાથી",
+                mainHeading: "✨ સ્નેકહેક ✨",
+                subHeading: "સ્વાદિષ્ટ ભારતીય નાસ્તા અને ભોજન શોધવા, બનાવવા અને હેક કરવા માટે તમારો અંતિમ સાથી!",
+                selectStateLabel: "રાજ્ય પસંદ કરો",
+                selectLanguageLabel: "ભાષા પસંદ કરો",
+                selectDietaryPreferenceLabel: "આહાર પસંદગી",
+                bothOption: "બંને",
+                vegetarianOption: "શાકાહારી",
+                nonVegetarianOption: "માંસાહારી",
+                generateButtonText: "વાનગીઓ બનાવો",
+                initialMessage: "જાદુ જોવા માટે રાજ્ય પસંદ કરો અને \"વાનગીઓ બનાવો\" પર ક્લિક કરો!",
+                modalTitle: "સંદેશ",
+                modalMessage: "અણધારી ભૂલ થઈ.",
+                modalCloseButton: "બંધ કરો",
+                selectionRequiredTitle: "પસંદગી જરૂરી",
+                selectionRequiredMessage: "વાનગીઓ બનાવવા પહેલાં કૃપા કરીને રાજ્ય પસંદ કરો.",
+                generatingText: "બનાવી રહ્યું છે...",
+                apiErrorTitle: "ઉત્પાદન ભૂલ",
+                apiErrorMessage: "વાનગીઓ મેળવતી વખતે ભૂલ થઈ. કૃપા કરીને પછીથી ફરી પ્રયાસ કરો.",
+                noDishesFound: "આ રાજ્ય માટે કોઈ વાનગીઓ મળી નથી. કૃપા કરીને ફરી પ્રયાસ કરો અથવા બીજું રાજ્ય પસંદ કરો.",
+                EAIResponse: "વાનગીઓ બનાવી શકાયું નથી. AI પ્રતિસાદ ખાલી અથવા ખોટો હતો.",
+                authErrorTitle: "પ્રમાણીકરણ ભૂલ",
+                authErrorMessage: "ફાયરબેસ સાથે પ્રમાણીકરણ નિષ્ફળ થયું. કેટલીક સુવિધાઓ યોગ્ય રીતે કાર્ય કરી શકતી નથી.",
+                createDishHeading: "💡 તમારા ઘટકોમાંથી વાનગી હેક કરો!",
+                createDishSubHeading: "ઘટકો મળ્યા? અમે તમને કંઈક અદ્ભુત બનાવવામાં મદદ કરીશું!",
+                ingredientsLabel: "તમારા ઘટકો",
+                ingredientsPlaceholder: "દા.ત., ચિકન, ટામેટાં, ડુંગળી, આદુ, લસણ, ચોખા",
+                createDishButtonText: "વાનગી બનાવો",
+                createDishInitialMessage: "તમારા ઘટકો ઉપર દાખલ કરો અને \"વાનગી બનાવો\" પર ક્લિક કરો!",
+                ingredientsRequiredTitle: "ઘટકો જરૂરી",
+                ingredientsRequiredMessage: "વાનગી બનાવવા માટે કૃપા કરીને કેટલાક ઘટકો દાખલ કરો.",
+                creatingDishText: "વાનગી બનાવી રહ્યું છે...",
+                createDishApiErrorTitle: "વાનગી બનાવવાની ભૂલ",
+                createDishApiErrorMessage: "વાનગી બનાવતી વખતે ભૂલ થઈ. કૃપા કરીને પછીથી ફરી પ્રયાસ કરો.",
+                noDishCreated: "પ્રદાન કરેલા ઘટકો સાથે વાનગી બનાવી શકાયું નથી. કૃપા કરીને અલગ ઘટકોનો પ્રયાસ કરો.",
+                malformedDishResponse: "વાનગી બનાવી શકાયું નથી. AI પ્રતિસાદ ખાલી અથવા ખોટો હતો.",
+                loadingRecipe: "રેસીપી લોડ થઈ રહી છે...",
+                recipeError: "રેસીપી મેળવી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+                recipeModalTitlePrefix: "માટે રેસીપી "
+            }
+        };
+
+        // Available languages
+        const languages = [
+            { code: 'en', name: 'English' },
+            { code: 'hi', name: 'हिंदी' },
+            { code: 'bn', name: 'বাংলা' }, // Bengali
+            { code: 'mr', name: 'মराठी' }, // Marathi
+            { code: 'te', name: 'తెలుగు' }, // Telugu
+            { code: 'kn', name: 'ಕನ್ನಡ' }, // Kannada
+            { code: 'gu', name: 'ગુજરાતી' }  // Gujarati
+        ];
+
+        /**
+         * Populates the state dropdown with options.
+         */
+        function populateStates() {
+            stateSelect.innerHTML = `<option value="" disabled selected>${translations[languageSelect.value || 'en'].selectStateLabel}</option>`;
+            indianStates.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        /**
+         * Populates the language dropdown with options.
+         */
+        function populateLanguages() {
+            languageSelect.innerHTML = '';
+            languages.forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang.code;
+                option.textContent = lang.name;
+                languageSelect.appendChild(option);
+            });
+            // Set default language to English
+            languageSelect.value = 'en';
+        }
+
+        /**
+         * Updates the UI elements based on the selected language.
+         * @param {string} langCode - The language code (e.g., 'en', 'hi').
+         */
+        function updateUIForLanguage(langCode) {
+            const currentTranslations = translations[langCode];
+            if (!currentTranslations) {
+                console.warn(`No translations found for language code: ${langCode}`);
+                return;
+            }
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (currentTranslations[key]) {
+                    if (element.tagName === 'TITLE') {
+                        element.textContent = currentTranslations[key];
+                    } else if (element.tagName === 'BUTTON' && key === 'generateButtonText') {
+                        if (!generateBtn.disabled) { // Only update if not in loading state
+                            buttonText.textContent = currentTranslations[key];
+                        }
+                    } else if (element.tagName === 'BUTTON' && key === 'createDishButtonText') {
+                        if (!createDishBtn.disabled) { // Only update if not in loading state
+                            createDishButtonText.textContent = currentTranslations[key];
+                        }
+                    } else if (element.tagName === 'BUTTON' && key === 'getSubstituteButtonText') {
+                        if (!getSubstituteBtn.disabled) { // Only update if not in loading state
+                            getSubstituteButtonText.textContent = currentTranslations[key];
+                        }
+                    } else if (element.tagName === 'BUTTON' && key === 'getMealSuggestionButtonText') {
+                        if (!getMealSuggestionBtn.disabled) { // Only update if not in loading state
+                            getMealSuggestionButtonText.textContent = currentTranslations[key];
+                        }
+                    } else if (element.tagName === 'SELECT' && key === 'selectStateLabel') {
+                        const defaultOption = stateSelect.querySelector('option[disabled][selected]');
+                        if (defaultOption) {
+                            defaultOption.textContent = currentTranslations[key];
+                        }
+                    } else if (element.tagName === 'TEXTAREA' && (key === 'ingredientsPlaceholder' || key === 'mealThemePlaceholder')) {
+                         element.placeholder = currentTranslations[key];
+                    } else if (element.tagName === 'INPUT' && key === 'substitutePlaceholder') {
+                        element.placeholder = currentTranslations[key];
+                    }
+                    else {
+                        element.textContent = currentTranslations[key];
+                    }
+                }
+            });
+            // Update dietary preference options
+            dietaryPreferenceSelect.querySelector('[data-lang-key="bothOption"]').textContent = currentTranslations.bothOption;
+            dietaryPreferenceSelect.querySelector('[data-lang-key="vegetarianOption"]').textContent = currentTranslations.vegetarianOption;
+            dietaryPreferenceSelect.querySelector('[data-lang-key="nonVegetarianOption"]').textContent = currentTranslations.nonVegetarianOption;
+            
+            // Re-populate states to update the default option text
+            populateStates();
+        }
+
+        /**
+         * Shows a custom message modal instead of alert().
+         * @param {string} titleKey - The key for the title in the translations object.
+         * @param {string} messageKey - The key for the message in the translations object.
+         * @param {string} [overrideTitle] - Optional: A specific title string to use instead of a key.
+         * @param {string} [overrideMessage] - Optional: A specific message string to use instead of a key.
+         */
+        function showMessageModal(titleKey, messageKey, overrideTitle = null, overrideMessage = null) {
+            const currentLang = languageSelect.value || 'en';
+            modalTitle.textContent = overrideTitle || translations[currentLang][titleKey] || titleKey;
+            modalMessage.textContent = overrideMessage || translations[currentLang][messageKey] || messageKey;
+            modalCloseBtn.textContent = translations[currentLang].modalCloseButton;
+            messageModal.classList.remove('hidden');
+        }
+
+        /**
+         * Hides the custom message modal.
+         */
+        function hideMessageModal() {
+            messageModal.classList.add('hidden');
+        }
+
+        /**
+         * Shows the recipe modal and fetches the recipe.
+         * @param {string} dishName - The name of the dish.
+         * @param {string} stateName - The state the dish belongs to.
+         */
+        async function showRecipe(dishName, stateName) {
+            const selectedLanguage = languageSelect.value;
+            const currentTranslations = translations[selectedLanguage];
+
+            recipeModalTitle.textContent = `${currentTranslations.recipeModalTitlePrefix}${dishName}`;
+            recipeModalContent.innerHTML = `<p class="text-center text-gray-500">${currentTranslations.loadingRecipe}</p>`;
+            recipeLoadingSpinner.classList.remove('hidden');
+            recipeModal.classList.remove('hidden');
+
+            try {
+                const prompt = `Provide a detailed recipe for "${dishName}" from ${stateName} in ${selectedLanguage === 'hi' ? 'Hindi' : selectedLanguage === 'bn' ? 'Bengali' : selectedLanguage === 'mr' ? 'Marathi' : selectedLanguage === 'te' ? 'Telugu' : selectedLanguage === 'kn' ? 'Kannada' : selectedLanguage === 'gu' ? 'Gujarati' : 'English'}. Include ingredients and step-by-step instructions. Do not include any introductory or concluding remarks, just the recipe.`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                // IMPORTANT: Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API Key
+                const apiKey = "AIzaSyASqXnehQBaivRzsj6pydhABulQfPBUdGY"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const recipeText = result.candidates[0].content.parts[0].text;
+                    recipeModalContent.innerHTML = `<pre class="whitespace-pre-wrap font-sans text-base">${recipeText}</pre>`;
+                } else {
+                    recipeModalContent.innerHTML = `<p class="text-red-600 text-center">${currentTranslations.recipeError}</p>`;
+                    console.error("Unexpected API response structure for recipe:", result);
+                }
+
+            } catch (error) {
+                console.error("Error fetching recipe:", error);
+                recipeModalContent.innerHTML = `<p class="text-red-600 text-center">${currentTranslations.recipeError} ${error.message}</p>`;
+            } finally {
+                recipeLoadingSpinner.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Hides the recipe modal.
+         */
+        function hideRecipeModal() {
+            recipeModal.classList.add('hidden');
+        }
+
+        /**
+         * Handles the click event for the generate button (state dishes).
+         */
+        generateBtn.addEventListener('click', async () => {
+            const selectedState = stateSelect.value;
+            const selectedLanguage = languageSelect.value;
+            const selectedDietaryPreference = dietaryPreferenceSelect.value; // Get selected dietary preference
+            const currentTranslations = translations[selectedLanguage];
+
+            if (!selectedState) {
+                showMessageModal("selectionRequiredTitle", "selectionRequiredMessage");
+                return;
+            }
+
+            // Clear previous output and show loading indicator
+            dishesOutput.innerHTML = '';
+            initialMessage.classList.add('hidden'); // Hide initial message
+            loadingSpinner.classList.remove('hidden');
+            buttonText.textContent = currentTranslations.generatingText;
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                // Construct the prompt for the LLM, including dietary preference
+                let prompt = `Provide a list of 25 popular traditional dishes from ${selectedState}, including their names and a very brief description (1-2 sentences each).`;
+                if (selectedDietaryPreference === "Vegetarian") {
+                    prompt += ` Focus only on vegetarian dishes.`;
+                } else if (selectedDietaryPreference === "Non-Vegetarian") {
+                    prompt += ` Focus only on non-vegetarian dishes.`;
+                }
+                prompt += ` Provide the names and descriptions ONLY in ${selectedLanguage === 'hi' ? 'Hindi' : selectedLanguage === 'bn' ? 'Bengali' : selectedLanguage === 'mr' ? 'Marathi' : selectedLanguage === 'te' ? 'Telugu' : selectedLanguage === 'kn' ? 'Kannada' : selectedLanguage === 'gu' ? 'Gujarati' : 'English'}. Format the response as a JSON array of objects, where each object has 'name' and 'description' keys. Example: [{"name": "Dish Name", "description": "Short description."}, ...]`;
+
+                // Prepare the payload for the Gemini API
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    "name": { "type": "STRING" },
+                                    "description": { "type": "STRING" }
+                                },
+                                "propertyOrdering": ["name", "description"]
+                            }
+                        }
+                    }
+                };
+
+                // IMPORTANT: Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API Key
+                const apiKey = "AIzaSyASqXnehQBaivRzsj6pydhABulQfPBUdGY"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const dishes = JSON.parse(jsonString);
+
+                    if (dishes.length > 0) {
+                        const ul = document.createElement('ul');
+                        ul.className = 'list-none space-y-4 text-gray-800'; /* Changed to list-none for custom styling */
+                        dishes.forEach((dish, index) => {
+                            const li = document.createElement('li');
+                            li.className = 'p-4 rounded-lg shadow-sm dish-item';
+                            li.style.animationDelay = `${index * 0.05}s`; // Staggered animation
+                            li.innerHTML = `<strong class="text-xl">${dish.name}:</strong> <span class="text-lg">${dish.description}</span>`;
+                            // Add click listener to show recipe
+                            li.addEventListener('click', () => showRecipe(dish.name, selectedState));
+                            ul.appendChild(li);
+                        });
+                        dishesOutput.appendChild(ul);
+                    } else {
+                        dishesOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.noDishesFound}</p>`;
+                    }
+                } else {
+                    dishesOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.malformedResponse}</p>`;
+                    console.error("Unexpected API response structure:", result);
+                }
+
+            } catch (error) {
+                console.error("Error fetching dishes:", error);
+                dishesOutput.innerHTML = `<p class="text-red-600 text-center text-lg font-semibold">${currentTranslations.apiErrorMessage}</p>`;
+                showMessageModal("apiErrorTitle", "apiErrorMessage", currentTranslations.apiErrorTitle, error.message);
+            } finally {
+                // Hide loading indicator and re-enable button
+                loadingSpinner.classList.add('hidden');
+                buttonText.textContent = currentTranslations.generateButtonText;
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+
+        /**
+         * Handles the click event for the create dish from ingredients button.
+         */
+        createDishBtn.addEventListener('click', async () => {
+            const ingredients = ingredientsInput.value.trim();
+            const selectedLanguage = languageSelect.value;
+            const currentTranslations = translations[selectedLanguage];
+
+            if (!ingredients) {
+                showMessageModal("ingredientsRequiredTitle", "ingredientsRequiredMessage");
+                return;
+            }
+
+            // Clear previous output and show loading indicator
+            createdDishOutput.innerHTML = '';
+            createDishInitialMessage.classList.add('hidden'); // Hide initial message
+            createDishLoadingSpinner.classList.remove('hidden');
+            createDishButtonText.textContent = currentTranslations.creatingDishText;
+            createDishBtn.disabled = true;
+            createDishBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                // Construct the prompt for the LLM
+                const prompt = `Suggest a single popular Indian dish that can be made with the following ingredients: "${ingredients}". Provide the dish name and a brief description (1-2 sentences) of the dish and how these ingredients might be used, ONLY in ${selectedLanguage === 'hi' ? 'Hindi' : selectedLanguage === 'bn' ? 'Bengali' : selectedLanguage === 'mr' ? 'Marathi' : selectedLanguage === 'te' ? 'Telugu' : selectedLanguage === 'kn' ? 'Kannada' : selectedLanguage === 'gu' ? 'Gujarati' : 'English'}. Format the response as a JSON object with 'name' and 'description' keys. Example: {"name": "Dish Name", "description": "Short description."}`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "name": { "type": "STRING" },
+                                "description": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["name", "description"]
+                        }
+                    }
+                };
+
+                // IMPORTANT: Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API Key
+                const apiKey = "AIzaSyASqXnehQBaivRzsj6pydhABulQfPBUdGY"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const dish = JSON.parse(jsonString);
+
+                    if (dish && dish.name && dish.description) {
+                        const div = document.createElement('div');
+                        div.className = 'p-4 rounded-lg shadow-sm dish-item';
+                        div.innerHTML = `<strong class="text-xl">${dish.name}:</strong> <span class="text-lg">${dish.description}</span>`;
+                        createdDishOutput.appendChild(div);
+                    } else {
+                        createdDishOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.noDishCreated}</p>`;
+                    }
+                } else {
+                    createdDishOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.malformedDishResponse}</p>`;
+                    console.error("Unexpected API response structure for create dish:", result);
+                }
+
+            } catch (error) {
+                console.error("Error creating dish:", error);
+                createdDishOutput.innerHTML = `<p class="text-red-600 text-center text-lg font-semibold">${currentTranslations.createDishApiErrorMessage}</p>`;
+                showMessageModal("createDishApiErrorTitle", "createDishApiErrorMessage", currentTranslations.createDishApiErrorTitle, error.message);
+            } finally {
+                // Hide loading indicator and re-enable button
+                createDishLoadingSpinner.classList.add('hidden');
+                createDishButtonText.textContent = currentTranslations.createDishButtonText;
+                createDishBtn.disabled = false;
+                createDishBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+
+        /**
+         * Handles the click event for the get substitutes button.
+         */
+        getSubstituteBtn.addEventListener('click', async () => {
+            const ingredient = substituteInput.value.trim();
+            const selectedLanguage = languageSelect.value;
+            const currentTranslations = translations[selectedLanguage];
+
+            if (!ingredient) {
+                showMessageModal("substituteRequiredTitle", "substituteRequiredMessage");
+                return;
+            }
+
+            substituteOutput.innerHTML = '';
+            substituteInitialMessage.classList.add('hidden');
+            substituteLoadingSpinner.classList.remove('hidden');
+            getSubstituteButtonText.textContent = currentTranslations.gettingSubstitutesText;
+            getSubstituteBtn.disabled = true;
+            getSubstituteBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                const prompt = `Provide 3-5 common and suitable substitutes for "${ingredient}" for Indian cooking, including a brief explanation for each substitute. Provide the response ONLY in ${selectedLanguage === 'hi' ? 'Hindi' : selectedLanguage === 'bn' ? 'Bengali' : selectedLanguage === 'mr' ? 'Marathi' : selectedLanguage === 'te' ? 'Telugu' : selectedLanguage === 'kn' ? 'Kannada' : selectedLanguage === 'gu' ? 'Gujarati' : 'English'}. Format the response as a JSON array of objects, where each object has 'substitute' and 'reason' keys. Example: [{"substitute": "Substitute Name", "reason": "Brief reason/use."}, ...]`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    "substitute": { "type": "STRING" },
+                                    "reason": { "type": "STRING" }
+                                },
+                                "propertyOrdering": ["substitute", "reason"]
+                            }
+                        }
+                    }
+                };
+
+                // IMPORTANT: Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API Key
+                const apiKey = "AIzaSyASqXnehQBaivRzsj6pydhABulQfPBUdGY"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const substitutes = JSON.parse(jsonString);
+
+                    if (substitutes.length > 0) {
+                        const ul = document.createElement('ul');
+                        ul.className = 'list-none space-y-4 text-gray-800'; /* Changed to list-none for custom styling */
+                        substitutes.forEach((item, index) => {
+                            const li = document.createElement('li');
+                            li.className = 'p-4 rounded-lg shadow-sm dish-item';
+                            li.style.animationDelay = `${index * 0.05}s`; // Staggered animation
+                            li.innerHTML = `<strong class="text-xl">${item.substitute}:</strong> <span class="text-lg">${item.reason}</span>`;
+                            ul.appendChild(li);
+                        });
+                        substituteOutput.appendChild(ul);
+                    } else {
+                        substituteOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.noSubstitutesFound}</p>`;
+                    }
+                } else {
+                    substituteOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.malformedSubstituteResponse}</p>`;
+                    console.error("Unexpected API response structure for substitutes:", result);
+                }
+
+            } catch (error) {
+                console.error("Error fetching substitutes:", error);
+                substituteOutput.innerHTML = `<p class="text-red-600 text-center text-lg font-semibold">${currentTranslations.substituteApiErrorMessage}</p>`;
+                showMessageModal("substituteApiErrorTitle", "substituteApiErrorMessage", currentTranslations.substituteApiErrorTitle, error.message);
+            } finally {
+                substituteLoadingSpinner.classList.add('hidden');
+                getSubstituteButtonText.textContent = currentTranslations.getSubstituteButtonText;
+                getSubstituteBtn.disabled = false;
+                getSubstituteBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+
+        /**
+         * Handles the click event for the get meal suggestion button.
+         */
+        getMealSuggestionBtn.addEventListener('click', async () => {
+            const mealTheme = mealThemeInput.value.trim();
+            const selectedLanguage = languageSelect.value;
+            const currentTranslations = translations[selectedLanguage];
+
+            if (!mealTheme) {
+                showMessageModal("mealThemeRequiredTitle", "mealThemeRequiredMessage");
+                return;
+            }
+
+            mealSuggestionOutput.innerHTML = '';
+            mealSuggestionInitialMessage.classList.add('hidden');
+            mealSuggestionLoadingSpinner.classList.remove('hidden');
+            getMealSuggestionButtonText.textContent = currentTranslations.gettingMealSuggestionText;
+            getMealSuggestionBtn.disabled = true;
+            getMealSuggestionBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                const prompt = `Suggest a single Indian dish or a simple meal idea based on the following preferences: "${mealTheme}". Provide the dish name and a brief description (2-3 sentences) of the dish/meal and why it fits the preferences, ONLY in ${selectedLanguage === 'hi' ? 'Hindi' : selectedLanguage === 'bn' ? 'Bengali' : selectedLanguage === 'mr' ? 'Marathi' : selectedLanguage === 'te' ? 'Telugu' : selectedLanguage === 'kn' ? 'Kannada' : selectedLanguage === 'gu' ? 'Gujarati' : 'English'}. Format the response as a JSON object with 'name' and 'description' keys. Example: {"name": "Dish Name", "description": "Short description."}`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "name": { "type": "STRING" },
+                                "description": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["name", "description"]
+                        }
+                    }
+                };
+
+                // IMPORTANT: Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API Key
+                const apiKey = "AIzaSyASqXnehQBaivRzsj6pydhABulQfPBUdGY"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const suggestion = JSON.parse(jsonString);
+
+                    if (suggestion && suggestion.name && suggestion.description) {
+                        const div = document.createElement('div');
+                        div.className = 'p-4 rounded-lg shadow-sm dish-item';
+                        div.innerHTML = `<strong class="text-xl">${suggestion.name}:</strong> <span class="text-lg">${suggestion.description}</span>`;
+                        mealSuggestionOutput.appendChild(div);
+                    } else {
+                        mealSuggestionOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.noMealSuggestionFound}</p>`;
+                    }
+                } else {
+                    mealSuggestionOutput.innerHTML = `<p class="text-gray-600 text-center text-lg italic">${currentTranslations.malformedMealSuggestionResponse}</p>`;
+                    console.error("Unexpected API response structure for meal suggestion:", result);
+                }
+
+            } catch (error) {
+                console.error("Error fetching meal suggestion:", error);
+                mealSuggestionOutput.innerHTML = `<p class="text-red-600 text-center text-lg font-semibold">${currentTranslations.mealSuggestionApiErrorMessage}</p>`;
+                showMessageModal("mealSuggestionApiErrorTitle", "mealSuggestionApiErrorMessage", currentTranslations.mealSuggestionApiErrorTitle, error.message);
+            } finally {
+                mealSuggestionLoadingSpinner.classList.add('hidden');
+                getMealSuggestionButtonText.textContent = currentTranslations.getMealSuggestionButtonText;
+                getMealSuggestionBtn.disabled = false;
+                getMealSuggestionBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+
+        // Clear button event listeners
+        clearIngredientsBtn.addEventListener('click', () => ingredientsInput.value = '');
+        clearSubstituteBtn.addEventListener('click', () => substituteInput.value = '');
+        clearMealThemeBtn.addEventListener('click', () => mealThemeInput.value = '');
+
+        // Add ripple effect to all buttons
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const diameter = Math.max(this.clientWidth, this.clientHeight);
+                const radius = diameter / 2;
+
+                ripple.style.width = ripple.style.height = `${diameter}px`;
+                ripple.style.left = `${e.clientX - (this.getBoundingClientRect().left + radius)}px`;
+                ripple.style.top = `${e.clientY - (this.getBoundingClientRect().top + radius)}px`;
+                ripple.classList.add('ripple');
+
+                const existingRipple = this.querySelector('.ripple');
+                if (existingRipple) {
+                    existingRipple.remove();
+                }
+                this.appendChild(ripple);
+            });
+        });
+
+
+        // Close common message modal event listener
+        modalCloseBtn.addEventListener('click', hideMessageModal);
+        messageModal.addEventListener('click', (e) => {
+            if (e.target === messageModal) {
+                hideMessageModal();
+            }
+        });
+
+        // Close recipe modal event listener
+        recipeModalCloseBtn.addEventListener('click', hideRecipeModal);
+        recipeModal.addEventListener('click', (e) => {
+            if (e.target === recipeModal) {
+                hideRecipeModal();
+            }
+        });
+
+
+        // Language selection change listener
+        languageSelect.addEventListener('change', (event) => {
+            updateUIForLanguage(event.target.value);
+        });
+
+        // Populate states and languages, and set initial UI language when the page loads
+        window.onload = () => {
+            populateLanguages(); // Populate languages first so populateStates can use the correct translation
+            updateUIForLanguage(languageSelect.value); // Apply initial language
+        };
+    </script>
+</body>
+</html>
